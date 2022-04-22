@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,10 +23,12 @@ public class EmployeeServiceImplementation implements EmployeeService, UserDetai
 
     private final EmployeeRepo employeeRepo;
     private final RoleRepo roleRepo;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Employee saveEmployee(Employee employee) {
         log.info("new employee {}to the database", employee.getEmployeeName());
+        employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         return employeeRepo.save(employee);
     }
 
@@ -44,15 +47,32 @@ public class EmployeeServiceImplementation implements EmployeeService, UserDetai
     }
 
     @Override
-    public Employee getEmployee(String employeeId) {
-        log.info("fetch  employee{}",employeeId);
-        return employeeRepo.findByEmployeeId(employeeId);
+    public Employee getEmployee() {
+      return (Employee) employeeRepo.findAll();
     }
 
     @Override
-    public List<Employee> getEmployee() {
-        log.info("fetch all employee");
-        return employeeRepo.findAll();
+    public Employee updateEmployees(String employeeId, Employee employee) {
+        Employee tempEmployees = employeeRepo.findByEmployeeId(employeeId);
+        tempEmployees.setEmployeeName(employee.getEmployeeName());
+        tempEmployees.setPassword(employee.getPassword());
+        tempEmployees.setDesignation(employee.getDesignation());
+        tempEmployees.setRole(employee.getRole());
+        return  employeeRepo.save(tempEmployees);
+    }
+
+    @Override
+    public void deleteEmployee(String employeeId) {
+
+        Employee tempEmployees = employeeRepo.findByEmployeeId(employeeId);
+        employeeRepo.deleteById(tempEmployees);
+
+    }
+
+    @Override
+    public Employee getOneEmployee(String employeeId ) {
+        log.info("fetch  employee{}",employeeId);
+        return employeeRepo.findByEmployeeId(employeeId);
     }
 
     @Override

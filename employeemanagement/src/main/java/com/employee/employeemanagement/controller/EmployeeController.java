@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -20,8 +21,12 @@ public class EmployeeController {
     private  final EmployeeService employeeService;
 
     @GetMapping("/employee")
-    public ResponseEntity<List<Employee>> getEmployee(){
+    public ResponseEntity getEmployee(){
         return  ResponseEntity.ok().body(employeeService.getEmployee());
+    }
+    @GetMapping("/getOneEmp/{id}")
+    public ResponseEntity  getOneEmployee(@PathVariable("id") String id) {
+        return ResponseEntity.ok(employeeService.getOneEmployee(id));
     }
 
     @PostMapping("/employee/save")
@@ -39,6 +44,20 @@ public class EmployeeController {
     public ResponseEntity<?> addRoleToEmployee(@RequestBody RoleToEmployeeForm form){
         employeeService.addRoleToEmployee(form.getEmployeeId(),form.getRoleName());
         return ResponseEntity.ok().build();
+    }
+
+    //Request update the employee details
+    @PutMapping("/update-emp/{empNo}")
+    public  ResponseEntity updateEmployee(@PathVariable String employeeId,@RequestBody Employee employee ){
+        employeeService.updateEmployees(employeeId, employee);
+        return ResponseEntity.ok("Saved");
+    }
+
+    //Delete employee
+    @DeleteMapping("/delete/{empNo}")
+    public ResponseEntity deleteEmployee(@PathVariable String employeeId){
+        employeeService.deleteEmployee(employeeId);
+        return  ResponseEntity.ok("delted");
     }
 }
 @Data
