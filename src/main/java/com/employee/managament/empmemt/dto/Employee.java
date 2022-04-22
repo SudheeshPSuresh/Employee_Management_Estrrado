@@ -24,4 +24,5 @@ public class Employee {
     private String empName;
     private Designation designation;
     private Role role;
+    private String password;
 }
