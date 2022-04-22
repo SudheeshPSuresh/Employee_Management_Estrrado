@@ -10,7 +10,11 @@ public interface EmployeeService {
     Employee saveEmployee(Employee employee);
     Role saveRole(Role role);
     void addRoleToEmployee (String employeeId,String roleName);
-    Employee getEmployee(String employeeId);
-    List<Employee> getEmployee();
+    Employee getEmployee();
 
+    Employee updateEmployees(String employeeId, Employee employee);
+
+    void deleteEmployee(String employeeId);
+
+    Employee getOneEmployee(String employeeId);
 }

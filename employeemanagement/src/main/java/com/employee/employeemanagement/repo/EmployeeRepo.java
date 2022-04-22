@@ -8,4 +8,6 @@ public interface EmployeeRepo extends JpaRepository<Employee,Long> {
     Employee findByEmployeeId(String EmployeeId);
 
     Employee findByEmployeeName(String employeeName);
+
+    void deleteById(Employee tempEmployees);
 }
