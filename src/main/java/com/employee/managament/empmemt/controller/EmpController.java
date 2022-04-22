@@ -3,14 +3,11 @@ package com.employee.managament.empmemt.controller;
 import com.employee.managament.empmemt.dto.Employee;
 import com.employee.managament.empmemt.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/")
@@ -21,18 +18,27 @@ public class EmpController {
 
     //request for adding the data to the database
     @PostConstruct
-    public List<Employee> createEmployee(){
+    public List<Employee> createEmployee() {
         return empService.createEmployee();
     }
 
     //Request get all  employees
     @GetMapping("/getemp")
-    public  List<Employee> getEmployees(){
-        return  empService.getAllEmployees();
+    public ResponseEntity getEmployees() {
+        return ResponseEntity.ok(empService.getAllEmployees());
     }
 
+    // Request to get one employee
     @GetMapping("/getOneEmp/{id}")
-    public Optional<Employee> getOneEmployee(@PathVariable("id") Integer id ){
-        return empService.getOneEmployee(id);
+    public ResponseEntity  getOneEmployee(@PathVariable("id") Integer id) {
+         return ResponseEntity.ok(empService.getOneEmployee(id));
     }
+
+    //Request to add employee to the database
+    @PostMapping("/addEmployee")
+    public ResponseEntity saveEmployees(@RequestBody List<Employee> employees) {
+        empService.saveEmployees(employees);
+        return ResponseEntity.ok("Saved");
+    }
+
 }

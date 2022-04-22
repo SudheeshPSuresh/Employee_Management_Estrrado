@@ -37,4 +37,9 @@ public class EmpService {
     public Optional<Employee> getOneEmployee(Integer id){
         return empRepository.findById(id);
     }
+
+    public List<Employee> saveEmployees(List<Employee> employees)
+    {
+        return empRepository.saveAll(employees);
+    }
 }
