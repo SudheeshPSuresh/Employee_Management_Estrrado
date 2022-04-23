@@ -72,11 +72,11 @@ public class EmployeeServiceImplementation implements EmployeeService, UserDetai
     }
 
     @Override
-    public void deleteEmployee(String empNo) {
-        Employee tempEmployee = employeeRepo.findByEmployeeId(empNo);
-        employeeRepo.deleteByEmployeeId(empNo);
-    }
-
+    public Optional<Employee> deleteEmployee(String id) {
+        Employee tempEmployee = employeeRepo.findByEmployeeId(id);
+         employeeRepo.delete(tempEmployee);
+        return null;
+}
     @Override
     public UserDetails loadUserByUsername(String employeeName) throws UsernameNotFoundException {
         Employee employee = employeeRepo.findByEmployeeName(employeeName);

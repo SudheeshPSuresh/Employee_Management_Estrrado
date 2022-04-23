@@ -20,6 +20,6 @@ public class Employee {
     private String designation;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> role=new ArrayList<>();
+    private Collection<Role> role= new ArrayList<>();
 
 }

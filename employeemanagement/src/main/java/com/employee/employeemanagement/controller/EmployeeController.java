@@ -5,16 +5,21 @@ import com.employee.employeemanagement.entity.Role;
 import com.employee.employeemanagement.service.EmployeeService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping(value = "/api")
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeController {
 
     private  final EmployeeService employeeService;
@@ -63,8 +68,18 @@ public class EmployeeController {
     @DeleteMapping("/employee/delete/{empNo}")
     public ResponseEntity deleteEmployee(@PathVariable String empNo){
         employeeService.deleteEmployee(empNo);
-        return  ResponseEntity.ok("delted");
+        return  ResponseEntity.ok("deleted");
     }
+    @GetMapping("/employee/filter-employee-role/{role}")
+    public ResponseEntity filterEmployeeRole(@PathVariable String role){
+        List<Employee> employees = employeeService.getAllEmployees();
+        Stream<Employee> employeeStream = employees.stream().filter(roles ->
+                roles.getRole().parallelStream().filter(i->i.getName().equals(role)).isParallel());
+        log.info("filter employee details{}",employees);
+        return ResponseEntity.ok(employees.stream().filter(roles -> roles.getRole().contains(new Role().getName() =="ADMIN")));
+    }
+
+
 }
 @Data
 class RoleToEmployeeForm{
