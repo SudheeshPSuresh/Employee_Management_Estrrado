@@ -5,16 +5,18 @@ import com.employee.employeemanagement.entity.Employee;
 import com.employee.employeemanagement.entity.Role;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EmployeeService {
     Employee saveEmployee(Employee employee);
     Role saveRole(Role role);
     void addRoleToEmployee (String employeeId,String roleName);
-    Employee getEmployee();
+    public List<Employee> getAllEmployees();
+    public Optional<Employee> getOneEmployee(String id);
 
-    Employee updateEmployees(String employeeId, Employee employee);
+    void saveEmployeeDetails(List<Employee> employees);
 
-    void deleteEmployee(String employeeId);
+    public Employee updateEmployees(String empNo, Employee employee) ;
 
-    Employee getOneEmployee(String employeeId);
+    public Optional<Employee> deleteEmployee(String empNo);
 }

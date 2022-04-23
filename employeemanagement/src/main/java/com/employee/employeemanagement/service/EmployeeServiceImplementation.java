@@ -17,6 +17,8 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class EmployeeServiceImplementation implements EmployeeService, UserDetailsService {
 
@@ -31,13 +33,11 @@ public class EmployeeServiceImplementation implements EmployeeService, UserDetai
         employee.setPassword(passwordEncoder.encode(employee.getPassword()));
         return employeeRepo.save(employee);
     }
-
     @Override
     public Role saveRole(Role role) {
         log.info("saving new role {} to the database",role.getName());
         return roleRepo.save(role);
     }
-
     @Override
     public void addRoleToEmployee(String employeeId, String roleName) {
         log.info("Adding new role {} to Employee {} ",roleName,employeeId);
@@ -47,34 +47,36 @@ public class EmployeeServiceImplementation implements EmployeeService, UserDetai
     }
 
     @Override
-    public Employee getEmployee() {
-      return (Employee) employeeRepo.findAll();
+    public List<Employee> getAllEmployees() {
+        return employeeRepo.findAll();
     }
 
     @Override
-    public Employee updateEmployees(String employeeId, Employee employee) {
-        Employee tempEmployees = employeeRepo.findByEmployeeId(employeeId);
-        tempEmployees.setEmployeeName(employee.getEmployeeName());
-        tempEmployees.setPassword(employee.getPassword());
-        tempEmployees.setDesignation(employee.getDesignation());
-        tempEmployees.setRole(employee.getRole());
-        return  employeeRepo.save(tempEmployees);
+    public Optional<Employee> getOneEmployee(String id) {
+        return Optional.ofNullable(employeeRepo.findByEmployeeId(id));
     }
 
     @Override
-    public void deleteEmployee(String employeeId) {
-
-        Employee tempEmployees = employeeRepo.findByEmployeeId(employeeId);
-        employeeRepo.deleteById(tempEmployees);
+    public void saveEmployeeDetails(List<Employee> employees) {
 
     }
 
     @Override
-    public Employee getOneEmployee(String employeeId ) {
-        log.info("fetch  employee{}",employeeId);
-        return employeeRepo.findByEmployeeId(employeeId);
+    public Employee updateEmployees(String empNo, Employee employee) {
+        Employee tempEmployee = employeeRepo.findByEmployeeId(empNo);
+        tempEmployee.setEmployeeName(employee.getEmployeeName());
+        tempEmployee.setDesignation(employee.getDesignation());
+        tempEmployee.setRole(employee.getRole());
+        tempEmployee.setPassword(employee.getPassword());
+        return employeeRepo.save(tempEmployee);
     }
 
+    @Override
+    public Optional<Employee> deleteEmployee(String id) {
+        Employee tempEmployee = employeeRepo.findByEmployeeId(id);
+         employeeRepo.delete(tempEmployee);
+        return null;
+}
     @Override
     public UserDetails loadUserByUsername(String employeeName) throws UsernameNotFoundException {
         Employee employee = employeeRepo.findByEmployeeName(employeeName);
